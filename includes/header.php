@@ -6,6 +6,7 @@ require_once 'db_config.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,5 +26,6 @@ require_once 'db_config.php';
 
     <script src="assets/libs/iconify-icon/iconify-icon.min.js"></script>
 </head>
+
 <body>
     <div class="wrapper">

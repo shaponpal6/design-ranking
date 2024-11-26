@@ -4,103 +4,114 @@ if (!isset($_SESSION)) {
     session_start();
 }
 require_once 'includes/db_config.php';
-require_once 'includes/check_auth.php';
+// require_once 'includes/check_auth.php';
 
 header('Content-Type: application/json');
 
 try {
-    // Debug logging
-    error_log('Received POST data: ' . print_r($_POST, true));
-    error_log('Received FILES data: ' . print_r($_FILES, true));
+    // print_r($_POST);
+    $rawData = file_get_contents("php://input");
 
-    // Verify all required fields are present and not empty
-    $requiredFields = ['organisation', 'location', 'points', 'prev', 'awards', 
-                      '1st', '2nd', '3rd', 'black', 'gold', 'silver', 'bronze', 'comm'];
-    
+    // Decode the raw JSON or form data, depending on the content type
+    $data = json_decode($rawData, true); // If it's JSON
+
+    // OR if it's not JSON and form-encoded, you can parse it manually
+    parse_str($rawData, $data); // For standard form-urlencoded data
+
+    // Now you can access the POST fields like this:
+    if (isset($data['organisation'])) {
+        $organisation = $data['organisation'];
+        // Process other fields similarly...
+    }
+
+    echo json_encode(['success' => true, 'data' => $data]);
+    return;
+    // Validate action
+    $action = 'create';
+    if ($action !== 'create') {
+        throw new Exception('Invalid action specified.');
+    }
+
+    // Check required fields
+    $requiredFields = [
+        'organisation',
+        'location',
+        'points',
+        'previous_rank',
+        'awards',
+        'first_place',
+        'second_place',
+        'third_place',
+        'black_medals',
+        'gold_medals',
+        'silver_medals',
+        'bronze_medals',
+        'commendations'
+    ];
+
     $missingFields = [];
     foreach ($requiredFields as $field) {
-        if (!isset($_POST[$field]) || trim($_POST[$field]) === '') {
+        if (empty($_POST[$field])) {
             $missingFields[] = $field;
         }
     }
-    
+
     if (!empty($missingFields)) {
-        throw new Exception("Missing required fields: " . implode(', ', $missingFields));
+        throw new Exception('Missing required fields: ' . implode(', ', $missingFields));
     }
 
-    // Handle logo upload
-    $logoPath = 'default-logo.png'; // Default value
-    if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        $uploadedFileType = $_FILES['logo']['type'];
-        
-        if (!in_array($uploadedFileType, $allowedTypes)) {
-            throw new Exception('Invalid file type. Only JPEG, PNG, and GIF are allowed.');
-        }
-
+    // Handle logo upload (optional field)
+    $logoPath = null; // Initially set to null for optional field
+    if (!empty($_FILES['logo']['tmp_name'])) {
         $uploadDir = 'uploads/';
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
-
-        $extension = pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION);
-        $filename = uniqid('logo_') . '.' . $extension;
+        $filename = uniqid('logo_') . '.' . pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION);
         $logoPath = $uploadDir . $filename;
-
         if (!move_uploaded_file($_FILES['logo']['tmp_name'], $logoPath)) {
-            throw new Exception('Failed to upload logo file.');
+            throw new Exception('Failed to upload logo.');
         }
     }
 
-    // Prepare SQL statement
-    $sql = "INSERT INTO agencydesignrankings (
-        logo, prev, organisation, location, points, awards,
-        `1st`, `2nd`, `3rd`, black, gold, silver, bronze, comm
+    // Prepare the SQL query to insert data into the database
+    $sql = "INSERT INTO agency_design_rankings (
+        logo, previous_rank, organisation, location, points, awards,
+        first_place, second_place, third_place,
+        black_medals, gold_medals, silver_medals, bronze_medals, commendations
     ) VALUES (
-        :logo, :prev, :organisation, :location, :points, :awards,
-        :first, :second, :third, :black, :gold, :silver, :bronze, :comm
+        :logo, :previous_rank, :organisation, :location, :points, :awards,
+        :first_place, :second_place, :third_place,
+        :black_medals, :gold_medals, :silver_medals, :bronze_medals, :commendations
     )";
 
+    // Prepare the statement
     $stmt = $pdo->prepare($sql);
 
-    // Bind parameters with validation
-    $params = [
-        ':logo' => $logoPath,
-        ':prev' => filter_var($_POST['prev'], FILTER_VALIDATE_INT),
-        ':organisation' => trim($_POST['organisation']),
-        ':location' => trim($_POST['location']),
-        ':points' => filter_var($_POST['points'], FILTER_VALIDATE_INT),
-        ':awards' => filter_var($_POST['awards'], FILTER_VALIDATE_INT),
-        ':first' => filter_var($_POST['1st'], FILTER_VALIDATE_INT),
-        ':second' => filter_var($_POST['2nd'], FILTER_VALIDATE_INT),
-        ':third' => filter_var($_POST['3rd'], FILTER_VALIDATE_INT),
-        ':black' => filter_var($_POST['black'], FILTER_VALIDATE_INT),
-        ':gold' => filter_var($_POST['gold'], FILTER_VALIDATE_INT),
-        ':silver' => filter_var($_POST['silver'], FILTER_VALIDATE_INT),
-        ':bronze' => filter_var($_POST['bronze'], FILTER_VALIDATE_INT),
-        ':comm' => filter_var($_POST['comm'], FILTER_VALIDATE_INT)
-    ];
-
-    // Execute the statement
-    if (!$stmt->execute($params)) {
-        throw new Exception('Database error: ' . implode(', ', $stmt->errorInfo()));
-    }
-
-    echo json_encode([
-        'success' => true,
-        'message' => 'Ranking added successfully'
+    // Bind values to the statement
+    $stmt->execute([
+        ':logo' => $logoPath, // Can be null if no logo is uploaded
+        ':previous_rank' => $_POST['previous_rank'] ?? null, // Can be null if no previous rank is provided
+        ':organisation' => $_POST['organisation'],
+        ':location' => $_POST['location'],
+        ':points' => $_POST['points'],
+        ':awards' => $_POST['awards'],
+        ':first_place' => $_POST['first_place'] ?? 0, // Default to 0 if empty
+        ':second_place' => $_POST['second_place'] ?? 0, // Default to 0 if empty
+        ':third_place' => $_POST['third_place'] ?? 0, // Default to 0 if empty
+        ':black_medals' => $_POST['black_medals'] ?? 0, // Default to 0 if empty
+        ':gold_medals' => $_POST['gold_medals'] ?? 0, // Default to 0 if empty
+        ':silver_medals' => $_POST['silver_medals'] ?? 0, // Default to 0 if empty
+        ':bronze_medals' => $_POST['bronze_medals'] ?? 0, // Default to 0 if empty
+        ':commendations' => $_POST['commendations'] ?? 0, // Default to 0 if empty
     ]);
 
+    // Return success response
+    echo json_encode(['success' => true, 'message' => 'Ranking added successfully']);
 } catch (Exception $e) {
-    error_log('Error in saveRanking.php: ' . $e->getMessage());
-    
+    // Return error response in JSON format
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage(),
-        'debug' => [
-            'post' => $_POST,
-            'files' => $_FILES
-        ]
+        'error' => $e->getMessage()
     ]);
 }
-?>
