@@ -23,10 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $silverMedals = is_numeric($_POST['silver'] ?? null) ? (int) $_POST['silver'] : 0;
         $bronzeMedals = is_numeric($_POST['bronze'] ?? null) ? (int) $_POST['bronze'] : 0;
         $commendations = is_numeric($_POST['comm'] ?? null) ? (int) $_POST['comm'] : 0;
-        $previousRank = is_numeric($_POST['prev'] ?? null) ? (int) $_POST['prev'] : null;
+        $previousRank = is_numeric($_POST['prev'] ?? null) ? (int) $_POST['prev'] : 0;
 
         // Handle file upload for logo
-        $logoPath = null;
+        $logoPath = '';
         if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
             $logo = $_FILES['logo'];
             $uploadDir = 'uploads/';
@@ -37,34 +37,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             move_uploaded_file($logo['tmp_name'], $logoPath);
         }
 
-        // Insert data into the database
+        // Establish a database connection (PDO)
         // $pdo = new PDO('mysql:host=localhost;dbname=your_database', 'username', 'password');
-        $sql = "INSERT INTO agency_design_rankings (
-            previous_rank, organisation, location, points, awards,
-            first_place, second_place, third_place,
-            black_medals, gold_medals, silver_medals, bronze_medals, commendations, logo
+
+        // Insert data into the `agencydesignrankings` table
+        $sql = "INSERT INTO agencydesignrankings (
+            logo, prev, organisation, location, points, awards,
+            `1st`, `2nd`, `3rd`, black, gold, silver, bronze, comm
         ) VALUES (
-            :previous_rank, :organisation, :location, :points, :awards,
-            :first_place, :second_place, :third_place,
-            :black_medals, :gold_medals, :silver_medals, :bronze_medals, :commendations, :logo
+            :logo, :prev, :organisation, :location, :points, :awards,
+            :firstPlace, :secondPlace, :thirdPlace, :blackMedals, :goldMedals, :silverMedals, :bronzeMedals, :commendations
         )";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
-            ':previous_rank' => $previousRank,
+            ':logo' => $logoPath,
+            ':prev' => $previousRank,
             ':organisation' => $organisation,
             ':location' => $location,
             ':points' => $points,
             ':awards' => $awards,
-            ':first_place' => $firstPlace,
-            ':second_place' => $secondPlace,
-            ':third_place' => $thirdPlace,
-            ':black_medals' => $blackMedals,
-            ':gold_medals' => $goldMedals,
-            ':silver_medals' => $silverMedals,
-            ':bronze_medals' => $bronzeMedals,
+            ':firstPlace' => $firstPlace,
+            ':secondPlace' => $secondPlace,
+            ':thirdPlace' => $thirdPlace,
+            ':blackMedals' => $blackMedals,
+            ':goldMedals' => $goldMedals,
+            ':silverMedals' => $silverMedals,
+            ':bronzeMedals' => $bronzeMedals,
             ':commendations' => $commendations,
-            ':logo' => $logoPath,
         ]);
 
         // Set a success message
@@ -83,8 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 // Fetch all rankings from database
-// $stmt = $pdo->query("SELECT * FROM agencydesignrankings ORDER BY points DESC");
-// $rankings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $pdo->query("SELECT * FROM agencydesignrankings ORDER BY points DESC");
+$rankings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <title>Dashboard | Admin Panel</title>
 
@@ -96,20 +96,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 
+<!-- Display Messages -->
+<?php if (!empty($_SESSION['message'])): ?>
+    <div class="alert <?= $_SESSION['message_type'] === 'success' ? 'alert-success' : 'alert-danger'; ?>">
+        <?= htmlspecialchars($_SESSION['message']); ?>
+    </div>
+    <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
+<?php endif; ?>
+
 <div class="grid xl:grid-cols-1 gap-6">
     <div class="card overflow-hidden">
         <div class="card-header flex justify-between items-center">
             <h4 class="card-title">Agency Design Rankings</h4>
             <button id="addRankingBtn" class="btn btn-sm bg-primary text-white !text-sm">Add New Ranking</button>
         </div>
-
-        <!-- Display Messages -->
-        <?php if (!empty($_SESSION['message'])): ?>
-            <div class="alert <?= $_SESSION['message_type'] === 'success' ? 'alert-success' : 'alert-danger'; ?>">
-                <?= htmlspecialchars($_SESSION['message']); ?>
-            </div>
-            <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
-        <?php endif; ?>
 
         <!-- Add New Ranking Form -->
         <div id="newRankingForm" class="p-4 border rounded-lg bg-white shadow-lg" style="display: none;">
@@ -127,11 +127,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="form-group flex flex-col">
                     <label class="form-label font-semibold mb-1">Organisation URL</label>
-                    <input type="text" name="organisation" class="form-control border rounded p-1.5">
+                    <input type="text" name="organisation" class="form-control border rounded p-1.5" required>
                 </div>
                 <div class="form-group flex flex-col">
                     <label class="form-label font-semibold mb-1">Location</label>
-                    <input type="text" name="location" class="form-control border rounded p-1.5">
+                    <input type="text" name="location" class="form-control border rounded p-1.5" required>
                 </div>
                 <div class="form-group flex flex-col">
                     <label class="form-label font-semibold mb-1">Points</label>
@@ -197,7 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="overflow-x-auto custom-scroll">
             <div class="min-w-full inline-block align-middle">
                 <div class="overflow-hidden">
-                    <!-- <table class="min-w-full">
+                    <table class="min-w-full">
                         <thead class="bg-light/40 border-b border-gray-200">
                             <tr>
                                 <th class="px-6 py-3 text-start">LOGO</th>
@@ -256,7 +256,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
-                    </table> -->
+                    </table>
                 </div>
             </div>
         </div>
