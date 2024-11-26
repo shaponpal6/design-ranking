@@ -25,6 +25,30 @@ require_once 'db_config.php';
     <link href="assets/css/app.min.css" rel="stylesheet" type="text/css">
 
     <script src="assets/libs/iconify-icon/iconify-icon.min.js"></script>
+
+    <style type="text/css">
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+        }
+
+        .logo-edit {
+            cursor: pointer;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-wrapper:hover .logo-edit {
+            opacity: 1;
+        }
+
+        .logo-input {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
