@@ -1,0 +1,96 @@
+<?php
+if (!isset($_SESSION)) {
+    session_start();
+}
+require_once 'includes/db_config.php';
+require_once 'includes/check_auth.php';
+include 'includes/header.php';
+include 'includes/sidebar.php';
+?>
+<title>Dashboard | Admin Panel</title>
+
+<!-- ============================================================== -->
+<!-- Start Page Content here -->
+<!-- ============================================================== -->
+
+
+                <!-- Page Title Start -->
+                <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
+                    <h4 class="text-default-900 text-lg font-medium mb-2">Dashboard</h4>
+
+                    <div class="md:flex hidden items-center gap-3 text-sm font-semibold">
+                        <a href="#" class="text-sm font-medium text-default-700">Dashboard</a>
+                        
+                    </div>
+                </div>
+                <!-- Page Title End -->
+
+
+                <div class="grid xl:grid-cols-1 gap-6">
+
+                <div class="card overflow-hidden">
+                        <div class="card-header flex justify-between items-center">
+                            <h4 class="card-title">Agency Design Rankings</h4>
+                            <a href="#" class="btn btn-sm bg-light !text-sm text-gray-800 ">Add New Ranking</a>
+                        </div>
+
+                        <div class="overflow-x-auto custom-scroll">
+                            <div class="min-w-full inline-block align-middle whitespace-nowrap">
+                                <div class="overflow-hidden">
+                                    <table class="min-w-full">
+                                        <thead class="bg-light/40 border-b border-gray-200">
+                                            <tr>
+                                                <th class="px-6 py-3 text-start">LOGO</th>
+                                                <th class="px-6 py-3 text-start">ORGANISATION</th>
+                                                <th class="px-6 py-3 text-start">LOCATION</th>
+                                                <th class="px-6 py-3 text-start">POINTS</th>
+                                                <th class="px-6 py-3 text-start">AWARDS</th>
+                                                <th class="px-6 py-3 text-start">1ST</th>
+                                                <th class="px-6 py-3 text-start">2ND</th>
+                                                <th class="px-6 py-3 text-start">3RD</th>
+                                                <th class="px-6 py-3 text-start">4TH</th>
+                                                <th class="px-6 py-3 text-start">BLACK</th>
+                                                <th class="px-6 py-3 text-start">GOLD</th>
+                                                <th class="px-6 py-3 text-start">SILVER</th>
+                                                <th class="px-6 py-3 text-start">BRONZE</th>
+                                                <th class="px-6 py-3 text-start">COMM</th>
+                                                <th class="px-6 py-3 text-start">ACTION</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b border-gray-200">
+                                                <td class="px-6 py-3"><img src="assets/images/logos/Kind-logo.png" alt="logo"></td>
+                                                <td class="px-6 py-3">Kind</td>
+                                                <td class="px-6 py-3">Norway</td>
+                                                <td class="px-6 py-3">220</td>
+                                                <td class="px-6 py-3">90</td>
+                                                <td class="px-6 py-3">12</td>
+                                                <td class="px-6 py-3">2</td>
+                                                <td class="px-6 py-3">1</td>
+                                                <td class="px-6 py-3">3</td>
+                                                <td class="px-6 py-3">5</td>
+                                                <td class="px-6 py-3">6</td>
+                                                <td class="px-6 py-3">7</td>
+                                                <td class="px-6 py-3">8</td>
+                                                <td class="px-6 py-3">7</td>
+                                                <td
+                        class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                        <div class="flex justify-end gap-2">
+                            <a class="text-primary hover:text-sky-700" href="editUser.php?id=<?php echo htmlspecialchars($user['id']); ?>">
+                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-black text-white">Edit</span>
+                            </a>
+                            <a class="text-primary hover:text-sky-700" href="deleteUser.php?id=<?php echo htmlspecialchars($user['id']); ?>">
+                                <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-red-500 text-white">Delete</span>
+                            </a>
+                        </div>
+                    </td>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- end card-->
+
+                </div>
+
+<?php include 'includes/footer.php'; ?>

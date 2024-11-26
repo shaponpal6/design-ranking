@@ -1,0 +1,151 @@
+[2024-11-22 16:07:18] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: admin@example.com Context: {"remember":false}
+[2024-11-22 16:07:18] File: C:\laragon\www\wdr\auth.php Line: 57 Message: Successful login for user: admin@example.com
+[2024-11-22 18:16:37] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: admin@example.com Context: {"remember":false}
+[2024-11-22 18:16:37] File: C:\laragon\www\wdr\auth.php Line: 57 Message: Successful login for user: admin@example.com
+[2024-11-23 05:51:51] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: admin@example.com Context: {"remember":false}
+[2024-11-23 05:51:51] File: C:\laragon\www\wdr\auth.php Line: 57 Message: Successful login for user: admin@example.com
+[2024-11-23 05:58:30] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: admin@example.com Context: {"remember":false}
+[2024-11-23 05:58:30] File: C:\laragon\www\wdr\auth.php Line: 57 Message: Successful login for user: admin@example.com
+[2024-11-23 06:41:45] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: hammadrabadia@gmail.com Context: {"remember":false}
+[2024-11-23 06:41:45] File: C:\laragon\www\wdr\auth.php Line: 57 Message: Successful login for user: hammadrabadia@gmail.com
+[2024-11-23 06:44:37] File: C:\laragon\www\wdr\logout.php Line: 10 Message: Logout attempt for user: hammadrabadia@gmail.com
+[2024-11-23 06:44:37] File: C:\laragon\www\wdr\logout.php Line: 33 Message: Successful logout
+[2024-11-23 06:44:40] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: hammadrabadia@gmail.com Context: {"remember":false}
+[2024-11-23 06:44:40] File: C:\laragon\www\wdr\auth.php Line: 36 Message: Invalid password for user: hammadrabadia@gmail.com
+[2024-11-23 06:44:40] File: C:\laragon\www\wdr\auth.php Line: 69 Message: Login error: Invalid email or password.
+[2024-11-23 06:44:46] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: hammadrabadia@gmail.com Context: {"remember":false}
+[2024-11-23 06:44:46] File: C:\laragon\www\wdr\auth.php Line: 57 Message: Successful login for user: hammadrabadia@gmail.com
+[2024-11-23 06:55:27] File: C:\laragon\www\wdr\logout.php Line: 10 Message: Logout attempt for user: admin@example.com
+[2024-11-23 06:55:27] File: C:\laragon\www\wdr\logout.php Line: 33 Message: Successful logout
+[2024-11-23 06:55:32] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: admin@example.com Context: {"remember":false}
+[2024-11-23 06:55:32] File: C:\laragon\www\wdr\auth.php Line: 31 Message: User not found or inactive: admin@example.com
+[2024-11-23 06:55:32] File: C:\laragon\www\wdr\auth.php Line: 69 Message: Login error: Invalid email or password.
+[2024-11-23 06:55:35] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: hammadrabadia@gmail.com Context: {"remember":false}
+[2024-11-23 06:55:35] File: C:\laragon\www\wdr\auth.php Line: 57 Message: Successful login for user: hammadrabadia@gmail.com
+[2024-11-23 06:57:17] File: C:\laragon\www\wdr\logout.php Line: 10 Message: Logout attempt for user: hammadrabadia@gmail.com
+[2024-11-23 06:57:17] File: C:\laragon\www\wdr\logout.php Line: 33 Message: Successful logout
+[2024-11-23 06:58:50] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: hammadrabadia@gmail.com Context: {"remember":true}
+[2024-11-23 06:58:50] File: C:\laragon\www\wdr\auth.php Line: 57 Message: Successful login for user: hammadrabadia@gmail.com
+[2024-11-23 07:02:02] File: C:\laragon\www\wdr\logout.php Line: 10 Message: Logout attempt for user: hammadrabadia@gmail.com
+[2024-11-23 07:02:02] File: C:\laragon\www\wdr\logout.php Line: 33 Message: Successful logout
+[2024-11-23 07:02:07] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: hammadrabadia@gmail.com Context: {"remember":true}
+[2024-11-23 07:02:07] File: C:\laragon\www\wdr\auth.php Line: 57 Message: Successful login for user: hammadrabadia@gmail.com
+[2024-11-23 07:03:34] File: C:\laragon\www\wdr\logout.php Line: 10 Message: Logout attempt for user: hammadrabadia@gmail.com
+[2024-11-23 07:03:34] File: C:\laragon\www\wdr\logout.php Line: 33 Message: Successful logout
+[2024-11-23 07:05:21] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: hammadrabadia@gmail.com Context: {"remember":true}
+[2024-11-23 07:05:21] File: C:\laragon\www\wdr\auth.php Line: 57 Message: Successful login for user: hammadrabadia@gmail.com
+[2024-11-23 07:05:23] File: C:\laragon\www\wdr\logout.php Line: 10 Message: Logout attempt for user: hammadrabadia@gmail.com
+[2024-11-23 07:05:23] File: C:\laragon\www\wdr\logout.php Line: 33 Message: Successful logout
+[2024-11-23 07:09:07] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: hammadrabadia@gmail.com Context: {"remember":false}
+[2024-11-23 07:09:07] File: C:\laragon\www\wdr\auth.php Line: 57 Message: Successful login for user: hammadrabadia@gmail.com
+[2024-11-24 01:32:01] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: hammadrabadia@gmail.com Context: {"remember":false}
+[2024-11-24 01:32:01] File: C:\laragon\www\wdr\auth.php Line: 57 Message: Successful login for user: hammadrabadia@gmail.com
+[24-Nov-2024 02:10:04 UTC] Incoming POST Request: Array
+(
+)
+
+[24-Nov-2024 02:10:04 UTC] Incoming FILES: Array
+(
+)
+
+[24-Nov-2024 02:12:23 UTC] Incoming POST Request: Array
+(
+)
+
+[24-Nov-2024 02:12:23 UTC] Incoming FILES: Array
+(
+)
+
+[24-Nov-2024 02:13:03 UTC] Incoming POST Request: Array
+(
+)
+
+[24-Nov-2024 02:13:03 UTC] Incoming FILES: Array
+(
+)
+
+[24-Nov-2024 02:17:20 UTC] Incoming POST Data: Array
+(
+)
+
+[24-Nov-2024 02:17:20 UTC] Incoming FILES Data: Array
+(
+)
+
+[24-Nov-2024 02:17:22 UTC] Incoming POST Data: Array
+(
+)
+
+[24-Nov-2024 02:17:22 UTC] Incoming FILES Data: Array
+(
+)
+
+[24-Nov-2024 02:17:23 UTC] Incoming POST Data: Array
+(
+)
+
+[24-Nov-2024 02:17:23 UTC] Incoming FILES Data: Array
+(
+)
+
+[24-Nov-2024 02:20:14 UTC] SERVER REQUEST METHOD: GET
+[24-Nov-2024 02:20:14 UTC] POST DATA: Array
+(
+)
+
+[24-Nov-2024 02:20:14 UTC] FILES DATA: Array
+(
+)
+
+[24-Nov-2024 02:30:01 UTC] SERVER REQUEST METHOD: GET
+[24-Nov-2024 02:30:01 UTC] POST DATA: Array
+(
+)
+
+[24-Nov-2024 02:30:01 UTC] FILES DATA: Array
+(
+)
+
+[24-Nov-2024 02:46:14 UTC] SERVER REQUEST METHOD: GET
+[24-Nov-2024 02:46:14 UTC] POST DATA: Array
+(
+)
+
+[24-Nov-2024 02:46:14 UTC] FILES DATA: Array
+(
+)
+
+[24-Nov-2024 02:49:18 UTC] SERVER REQUEST METHOD: GET
+[24-Nov-2024 02:49:18 UTC] POST DATA: Array
+(
+)
+
+[24-Nov-2024 02:49:18 UTC] FILES DATA: Array
+(
+)
+
+[24-Nov-2024 02:49:23 UTC] SERVER REQUEST METHOD: GET
+[24-Nov-2024 02:49:23 UTC] POST DATA: Array
+(
+)
+
+[24-Nov-2024 02:49:23 UTC] FILES DATA: Array
+(
+)
+
+[24-Nov-2024 02:49:25 UTC] SERVER REQUEST METHOD: GET
+[24-Nov-2024 02:49:25 UTC] POST DATA: Array
+(
+)
+
+[24-Nov-2024 02:49:25 UTC] FILES DATA: Array
+(
+)
+
+[2024-11-25 09:05:18] File: C:\laragon\www\wdr\auth.php Line: 18 Message: Login attempt for email: hammadrabadia@gmail.com Context: {"remember":false}
+[2024-11-25 09:05:18] File: C:\laragon\www\wdr\auth.php Line: 57 Message: Successful login for user: hammadrabadia@gmail.com
+[2024-11-26 08:36:02] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 18 Message: Login attempt for email: sp@gmail.com Context: {"remember":true}
+[2024-11-26 08:36:02] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 36 Message: Invalid password for user: sp@gmail.com
+[2024-11-26 08:36:02] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 69 Message: Login error: Invalid email or password.
+[2024-11-26 08:46:36] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 18 Message: Login attempt for email: sp@gmail.com Context: {"remember":true}
+[2024-11-26 08:46:36] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 57 Message: Successful login for user: sp@gmail.com
