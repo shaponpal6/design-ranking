@@ -85,42 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'update') {
-    $id = $_POST['id'];
-    $updatedFields = [];
-    print_r($_POST);
-    exit();
-
-    // Validate and add fields that changed
-    foreach (['prev', 'organisation', 'location', '1st', '2nd', '3rd', 'black', 'gold', 'silver', 'bronze', 'comm'] as $field) {
-        if (isset($_POST[$field])) {
-            $updatedFields[$field] = $_POST[$field];
-        }
-    }
-
-    if (!empty($updatedFields)) {
-        // Construct SQL for updates
-        $updateSQL = 'UPDATE agencydesignrankings SET ';
-        $params = [];
-        foreach ($updatedFields as $key => $value) {
-            $updateSQL .= "$key = :$key, ";
-            $params[":$key"] = $value;
-        }
-        $updateSQL = rtrim($updateSQL, ', ') . ' WHERE id = :id';
-        $params[':id'] = $id;
-
-        try {
-            $stmt = $pdo->prepare($updateSQL);
-            $stmt->execute($params);
-            echo "Update successful!";
-        } catch (Exception $e) {
-            echo "Error updating record: " . $e->getMessage();
-        }
-    } else {
-        echo "No changes detected.";
-    }
-}
-
 
 
 // Fetch all rankings from database
@@ -454,7 +418,9 @@ $rankings = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (isEditing) {
                 // Save changes
                 const id = row.data('id');
-                const updatedData = {};
+                const points = $('#points-' + id).text();
+                const awards = $('#awards-' + id).text();
+                const updatedData = { id: id, action: 'update', points, awards };
 
                 row.find('.editable').each(function () {
                     const field = $(this).attr('id').split('-')[0];
@@ -471,27 +437,34 @@ $rankings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-                const form = $('<form>', {
-                    action: 'http://localhost/wdr/agencydesignrankings',
-                    method: 'post',
-                    enctype: 'multipart/form-data',
-                }).append($('<input>', { type: 'hidden', name: 'action', value: 'update' }))
-                    .append($('<input>', { type: 'hidden', name: 'id', value: id }));
 
-                let hasChanges = false;
-                row.find('.editable').each(function () {
-                    const original = $(this).data('original');
-                    const current = $(this).text().trim();
-                    const name = $(this).data('name');
 
-                    if (original !== current) {
-                        form.append($('<input>', { type: 'hidden', name: name, value: current }));
-                        hasChanges = true;
-                    }
-                });
+
+
+                const data = { action: 'update', id: id };
+                let hasChanges = true;
+
 
                 if (hasChanges) {
-                    form.appendTo('body').submit();
+                    $.ajax({
+                        url: 'http://localhost/wdr/saveRanking',
+                        type: 'POST',
+                        data: (updatedData),
+                        success: function (response) {
+                            console.log('response :>> ', response);
+                            if (response.success) {
+                                // alert('Data saved successfully!');
+                                // Optionally, reload the row or page
+                                location.reload();
+                            } else {
+                                alert('Error: ' + (response.error || 'Unknown error occurred.'));
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('AJAX Error:', status, error);
+                            alert('An error occurred. Please try again.');
+                        }
+                    });
                 } else {
                     alert('No changes made.');
                 }
