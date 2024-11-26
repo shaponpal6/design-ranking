@@ -29,13 +29,13 @@
 <script src="assets/js/app.js"></script>
 
 <!-- Apexcharts js -->
-<!-- <script src="assets/libs/apexcharts/apexcharts.min.js"></script> -->
+<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
 
 <!-- Vector Map Js -->
 <script src="assets/libs/jsvectormap/js/jsvectormap.min.js"></script>
 
 <!-- Dashboard Project Page js -->
-<!-- <script src="assets/js/pages/dashboard.js"></script> -->
+<script src="assets/js/pages/dashboard.js"></script>
 
 </body>
 

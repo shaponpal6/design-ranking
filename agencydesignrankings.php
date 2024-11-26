@@ -7,54 +7,47 @@ require_once 'includes/check_auth.php';
 include 'includes/header.php';
 include 'includes/sidebar.php';
 
-// Fetch all rankings from database
-// $stmt = $pdo->query("SELECT * FROM agencydesignrankings ORDER BY points DESC");
-// $rankings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-<!-- <title>Dashboard | Admin Panel</title> -->
-
-<?php
-
-
-// Handle the form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve form data
-    $action = $_POST['action'] ?? '';
-    $organisation = $_POST['organisation'] ?? '';
-    $location = $_POST['location'] ?? '';
-    $points = $_POST['points'] ?? 0;
-    $awards = $_POST['awards'] ?? 0;
-    $firstPlace = $_POST['1st'] ?? 0;
-    $secondPlace = $_POST['2nd'] ?? 0;
-    $thirdPlace = $_POST['3rd'] ?? 0;
-    $blackMedals = $_POST['black'] ?? 0;
-    $goldMedals = $_POST['gold'] ?? 0;
-    $silverMedals = $_POST['silver'] ?? 0;
-    $bronzeMedals = $_POST['bronze'] ?? 0;
-    $commendations = $_POST['comm'] ?? 0;
-    $previousRank = $_POST['prev'] ?? null;
-
-    // Handle file upload (Logo)
-    // if (isset($_FILES['logo'])) {
-    //     $logo = $_FILES['logo'];
-    //     // Save logo to server (e.g., move to a folder)
-    //     $logoPath = 'uploads/' . basename($logo['name']);
-    //     move_uploaded_file($logo['tmp_name'], $logoPath);
-    // }
-
-    // Insert data into the database
     try {
-        // Example database insert query (assuming PDO connection)
+        // Retrieve form data with default values for missing fields
+        $action = $_POST['action'] ?? '';
+        $organisation = trim($_POST['organisation'] ?? '') ?: '';
+        $location = trim($_POST['location'] ?? '') ?: '';
+        $points = is_numeric($_POST['points'] ?? null) ? (int) $_POST['points'] : 0;
+        $awards = is_numeric($_POST['awards'] ?? null) ? (int) $_POST['awards'] : 0;
+        $firstPlace = is_numeric($_POST['1st'] ?? null) ? (int) $_POST['1st'] : 0;
+        $secondPlace = is_numeric($_POST['2nd'] ?? null) ? (int) $_POST['2nd'] : 0;
+        $thirdPlace = is_numeric($_POST['3rd'] ?? null) ? (int) $_POST['3rd'] : 0;
+        $blackMedals = is_numeric($_POST['black'] ?? null) ? (int) $_POST['black'] : 0;
+        $goldMedals = is_numeric($_POST['gold'] ?? null) ? (int) $_POST['gold'] : 0;
+        $silverMedals = is_numeric($_POST['silver'] ?? null) ? (int) $_POST['silver'] : 0;
+        $bronzeMedals = is_numeric($_POST['bronze'] ?? null) ? (int) $_POST['bronze'] : 0;
+        $commendations = is_numeric($_POST['comm'] ?? null) ? (int) $_POST['comm'] : 0;
+        $previousRank = is_numeric($_POST['prev'] ?? null) ? (int) $_POST['prev'] : null;
+
+        // Handle file upload for logo
+        $logoPath = null;
+        if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
+            $logo = $_FILES['logo'];
+            $uploadDir = 'uploads/';
+            $logoPath = $uploadDir . basename($logo['name']);
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+            move_uploaded_file($logo['tmp_name'], $logoPath);
+        }
+
+        // Insert data into the database
+        // $pdo = new PDO('mysql:host=localhost;dbname=your_database', 'username', 'password');
         $sql = "INSERT INTO agency_design_rankings (
             previous_rank, organisation, location, points, awards,
             first_place, second_place, third_place,
-            black_medals, gold_medals, silver_medals, bronze_medals, commendations
+            black_medals, gold_medals, silver_medals, bronze_medals, commendations, logo
         ) VALUES (
             :previous_rank, :organisation, :location, :points, :awards,
             :first_place, :second_place, :third_place,
-            :black_medals, :gold_medals, :silver_medals, :bronze_medals, :commendations
+            :black_medals, :gold_medals, :silver_medals, :bronze_medals, :commendations, :logo
         )";
-        $logoPath = "assets";
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -71,25 +64,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':silver_medals' => $silverMedals,
             ':bronze_medals' => $bronzeMedals,
             ':commendations' => $commendations,
-            // ':logo_path' => $logoPath,
+            ':logo' => $logoPath,
         ]);
 
-        echo "Ranking added successfully!";
+        // Set a success message
+        $_SESSION['message'] = "Ranking added successfully!";
+        $_SESSION['message_type'] = 'success';
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+        // Set an error message
+        $_SESSION['message'] = "Error: " . $e->getMessage();
+        $_SESSION['message_type'] = 'error';
     }
+
+    // Refresh the page
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
 }
 
 
-
-
-
-
-
-
-
-
+// Fetch all rankings from database
+// $stmt = $pdo->query("SELECT * FROM agencydesignrankings ORDER BY points DESC");
+// $rankings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+<title>Dashboard | Admin Panel</title>
 
 <!-- Start Page Content -->
 <div class="flex items-center md:justify-between flex-wrap gap-2 mb-6">
@@ -105,6 +102,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h4 class="card-title">Agency Design Rankings</h4>
             <button id="addRankingBtn" class="btn btn-sm bg-primary text-white !text-sm">Add New Ranking</button>
         </div>
+
+        <!-- Display Messages -->
+        <?php if (!empty($_SESSION['message'])): ?>
+            <div class="alert <?= $_SESSION['message_type'] === 'success' ? 'alert-success' : 'alert-danger'; ?>">
+                <?= htmlspecialchars($_SESSION['message']); ?>
+            </div>
+            <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
+        <?php endif; ?>
 
         <!-- Add New Ranking Form -->
         <div id="newRankingForm" class="p-4 border rounded-lg bg-white shadow-lg" style="display: none;">
