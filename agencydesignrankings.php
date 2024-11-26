@@ -507,6 +507,40 @@ $rankings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
+    //delete
+    $(document).ready(function () {
+        $('.delete-ranking').on('click', function () {
+            const row = $(this).closest('tr');
+            const id = row.data('id');
+            // const id = $(this).data('id'); // Assuming the `data-id` contains the ID of the ranking
+
+            console.log('id :>> ', id);
+            // Confirm deletion
+            if (confirm('Are you sure you want to delete this ranking?')) {
+                $.ajax({
+                    url: 'http://localhost/wdr/saveRanking',
+                    type: 'POST',
+                    data: {
+                        action: 'delete',
+                        id: id
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert('Ranking deleted successfully!');
+                            row.remove(); // Remove the row from the table
+                        } else {
+                            alert('Error: ' + (response.error || 'Unable to delete the ranking.'));
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                        alert('An error occurred while deleting the ranking. Please try again.');
+                    }
+                });
+            }
+        });
+    });
+
 
 
 </script>
