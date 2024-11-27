@@ -149,3 +149,11 @@
 [2024-11-26 08:36:02] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 69 Message: Login error: Invalid email or password.
 [2024-11-26 08:46:36] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 18 Message: Login attempt for email: sp@gmail.com Context: {"remember":true}
 [2024-11-26 08:46:36] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 57 Message: Successful login for user: sp@gmail.com
+[2024-11-27 17:16:56] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 18 Message: Login attempt for email: shapon@gmail.com Context: {"remember":false}
+[2024-11-27 17:16:56] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 31 Message: User not found or inactive: shapon@gmail.com
+[2024-11-27 17:16:56] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 69 Message: Login error: Invalid email or password.
+[2024-11-27 17:17:11] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 18 Message: Login attempt for email: shapon@gmail.com Context: {"remember":true}
+[2024-11-27 17:17:11] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 31 Message: User not found or inactive: shapon@gmail.com
+[2024-11-27 17:17:11] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 69 Message: Login error: Invalid email or password.
+[2024-11-27 17:18:25] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 18 Message: Login attempt for email: sp@gmail.com Context: {"remember":true}
+[2024-11-27 17:18:25] File: /Applications/XAMPP/xamppfiles/htdocs/wdr/auth.php Line: 57 Message: Successful login for user: sp@gmail.com

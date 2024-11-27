@@ -6,14 +6,47 @@ require_once 'includes/db_config.php';
 require_once 'includes/check_auth.php';
 include 'includes/header.php';
 include 'includes/sidebar.php';
+function updatePrevRankingsHome($pdo)
+{
+    try {
+        // Start a transaction to ensure data consistency
+        $pdo->beginTransaction();
+
+        // Step 1: Retrieve all rows sorted by points in descending order
+        $query = "SELECT id FROM agencydesignrankings ORDER BY points DESC";
+        $stmt = $pdo->query($query);
+        $rankings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Step 2: Update the `prev` column based on sorted order
+        $rank = 1;
+        $updateQuery = "UPDATE agencydesignrankings SET prev = :prev WHERE id = :id";
+        $updateStmt = $pdo->prepare($updateQuery);
+
+        foreach ($rankings as $ranking) {
+            $updateStmt->execute([
+                ':prev' => $rank,
+                ':id' => $ranking['id']
+            ]);
+            $rank++;
+        }
+
+        // Commit the transaction
+        $pdo->commit();
+        // echo "Previous rankings updated successfully!";
+    } catch (Exception $e) {
+        // Rollback the transaction in case of an error
+        $pdo->rollBack();
+        // echo "Error updating rankings: " . $e->getMessage();
+    }
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? null;
     if ($action == 'create') {
         try {
             // Retrieve form data with default values for missing fields
-            $action = $_POST['action'] ?? '';
-
             $organisation = trim($_POST['organisation'] ?? '') ?: '';
+            $organisation_url = trim($_POST['organisation_url'] ?? '') ?: '';
             $location = trim($_POST['location'] ?? '') ?: '';
             $points = is_numeric($_POST['points'] ?? null) ? (int) $_POST['points'] : 0;
             $awards = is_numeric($_POST['awards'] ?? null) ? (int) $_POST['awards'] : 0;
@@ -44,10 +77,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Insert data into the `agencydesignrankings` table
             $sql = "INSERT INTO agencydesignrankings (
-            logo, prev, organisation, location, points, awards,
+            logo, prev, organisation, organisation_url, location, points, awards,
             `1st`, `2nd`, `3rd`, black, gold, silver, bronze, comm
         ) VALUES (
-            :logo, :prev, :organisation, :location, :points, :awards,
+            :logo, :prev, :organisation, :organisation_url, :location, :points, :awards,
             :firstPlace, :secondPlace, :thirdPlace, :blackMedals, :goldMedals, :silverMedals, :bronzeMedals, :commendations
         )";
 
@@ -56,6 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':logo' => $logoPath,
                 ':prev' => $previousRank,
                 ':organisation' => $organisation,
+                ':organisation_url' => $organisation_url,
                 ':location' => $location,
                 ':points' => $points,
                 ':awards' => $awards,
@@ -68,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':bronzeMedals' => $bronzeMedals,
                 ':commendations' => $commendations,
             ]);
-
+            updatePrevRankingsHome($pdo);
             // Set a success message
             $_SESSION['message'] = "Ranking added successfully!";
             $_SESSION['message_type'] = 'success';
@@ -131,12 +165,16 @@ $rankings = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         class="form-control border rounded p-1.5 bg-gray-200" readonly>
                 </div>
                 <div class="form-group flex flex-col">
-                    <label class="form-label font-semibold mb-1">Organisation URL</label>
+                    <label class="form-label font-semibold mb-1">Organisation Name</label>
                     <input type="text" name="organisation" class="form-control border rounded p-1.5" required>
                 </div>
                 <div class="form-group flex flex-col">
+                    <label class="form-label font-semibold mb-1">Organisation URL</label>
+                    <input type="text" name="organisation_url" class="form-control border rounded p-1.5" required>
+                </div>
+                <div class="form-group flex flex-col">
                     <label class="form-label font-semibold mb-1">Location</label>
-                    <input type="text" name="location" class="form-control border rounded p-1.5" required>
+                    <input type="text" name="location" class="form-control border rounded p-1.5">
                 </div>
                 <div class="form-group flex flex-col">
                     <label class="form-label font-semibold mb-1">Points</label>
@@ -236,7 +274,10 @@ $rankings = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <?php echo htmlspecialchars($ranking['prev']); ?>
                                     </td>
                                     <td id="organisation-<?php echo $ranking['id']; ?>" class="editable px-6 py-3">
-                                        <?php echo htmlspecialchars($ranking['organisation']); ?>
+                                        <a href="<?php echo htmlspecialchars($ranking['organisation_url']); ?>"
+                                            target="_blank">
+                                            <?php echo htmlspecialchars($ranking['organisation']); ?>
+                                        </a>
                                     </td>
                                     <td id="location-<?php echo $ranking['id']; ?>" class="editable px-6 py-3">
                                         <?php echo htmlspecialchars($ranking['location']); ?>
@@ -333,7 +374,7 @@ $rankings = $stmt->fetchAll(PDO::FETCH_ASSOC);
         function generateRandomRank() {
             return Math.floor(Math.random() * 100) + 1;
         }
-        $prevRankingField.val(generateRandomRank());
+        //$prevRankingField.val(generateRandomRank());
 
         // Show the form when "Add New Ranking" is clicked
         $addRankingBtn.on('click', function () {
@@ -344,7 +385,7 @@ $rankings = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $cancelBtn.on('click', function () {
             $newRankingForm.hide();
             $rankingForm[0].reset();
-            $prevRankingField.val(generateRandomRank());
+            //$prevRankingField.val(generateRandomRank());
         });
 
         // Recalculate Points and Awards dynamically
