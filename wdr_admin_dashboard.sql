@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 27, 2024 at 06:24 PM
+-- Generation Time: Nov 28, 2024 at 07:33 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -55,6 +55,30 @@ INSERT INTO `agencydesignrankings` (`id`, `logo`, `prev`, `organisation`, `organ
 (8, '', 1, 'test', 'http://localhost/wdr/agencydesignrankings?', 'Dhaka', 7201, 3698, 0, 23, 2, 0, 0, 0, 3430, 243),
 (10, '', 2, 'rf', 'http://localhost/wdr/agencydesignrankings?', 'Dhaka', 288, 60, 54, 0, 6, 0, 0, 0, 0, 0);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `full_name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_on` datetime DEFAULT current_timestamp(),
+  `last_login` datetime DEFAULT NULL,
+  `user_type` enum('admin','manager','user') DEFAULT 'user',
+  `user_active` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `full_name`, `email`, `password`, `created_on`, `last_login`, `user_type`, `user_active`) VALUES
+(2, 'Hammad Rabadia', 'sp@gmail.com', '$2y$10$Rf2A4gpmHDMUAtvmCmeCSeBX1LoD8LUyTs6gJavAZTittywAtmwnq', '2024-11-23 11:22:29', '2024-11-27 22:18:25', 'admin', 1);
+
 --
 -- Indexes for dumped tables
 --
@@ -66,6 +90,13 @@ ALTER TABLE `agencydesignrankings`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_email` (`email`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -73,6 +104,12 @@ ALTER TABLE `agencydesignrankings`
 -- AUTO_INCREMENT for table `agencydesignrankings`
 --
 ALTER TABLE `agencydesignrankings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
